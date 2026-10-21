@@ -72,3 +72,20 @@ Response: HTML panel `data-module="call2"` with:
 
 After this, conversationId/vcid appears and
 vchat.getConversationParams can be called on calls.okcdn.ru.
+
+
+## Incoming call panel (exit) — ok.ru/dk
+
+```
+cmd=VideoChatCall
+st.call.ft=CALL_VIDEO|CALL_AUDIO
+st.call.dir=INCOMING
+st.call.conversationId=<uuid>   # already assigned by OK
+st.call.opponentId=<caller uid>
+gwt.requested=...
+```
+
+HTML: `data-conversation-id`, `data-direction="INCOMING"`.
+
+Still TODO: how the page **learns** about ringing before this dk call
+(websocket / long-poll / push) — that is the exit WaitIncomingCall source.
