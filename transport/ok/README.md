@@ -65,3 +65,13 @@ POST https://calls.okcdn.ru/fb.do
 
 Media/TURN response (method name TBD):
   token, endpoint wss://videowebrtc.okcdn.ru/ws2, turn_server, client_type PORTAL, external_user_type ODKL
+
+## Known calls.okcdn.ru methods
+
+| method | params | result |
+|--------|--------|--------|
+| auth.anonymLogin | session_data, application_key | uid, session_key |
+| system.getInfo | session_key | serverTime |
+| vchat.getConversationParams | session_key, conversationId | token, endpoint, turn, PORTAL |
+
+Still TODO: method that **creates** conversationId / starts call to peer uid.
