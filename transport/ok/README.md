@@ -54,24 +54,21 @@ body: {"id": 30}
 Плюс: как exit узнаёт о **входящем** звонке.
 
 
-## Шаг 2 — calls.okcdn.ru/fb.do (снято)
+## Start outgoing call (снято) — ok.ru/dk
 
-POST https://calls.okcdn.ru/fb.do
-  method=auth.anonymLogin
-  application_key=CPCCMQKGDIHBABABA
-  session_data={version, device_id, client_type:SDK_JS, auth_token:$...}
+```
+POST/GET https://ok.ru/dk
+  cmd=VideoChatCall
+  st.call.ft=CALL_AUDIO
+  st.call.dir=OUTGOING
+  st.call.opponentId=<peer uid>    # e.g. 910703757272
+  gwt.requested=<token>
+```
 
-→ uid, session_key, api_server
+Response: HTML panel `data-module="call2"` with:
+- data-opponent-id, data-participant-id
+- data-params JSON (platform WEB, clientType PORTAL, protocolVersion 3, …)
+- js-participants: local + remote USER ids
 
-Media/TURN response (method name TBD):
-  token, endpoint wss://videowebrtc.okcdn.ru/ws2, turn_server, client_type PORTAL, external_user_type ODKL
-
-## Known calls.okcdn.ru methods
-
-| method | params | result |
-|--------|--------|--------|
-| auth.anonymLogin | session_data, application_key | uid, session_key |
-| system.getInfo | session_key | serverTime |
-| vchat.getConversationParams | session_key, conversationId | token, endpoint, turn, PORTAL |
-
-Still TODO: method that **creates** conversationId / starts call to peer uid.
+After this, conversationId/vcid appears and
+vchat.getConversationParams can be called on calls.okcdn.ru.
