@@ -16,8 +16,7 @@ const (
 	// Known from user capture — adjust after HAR:
 	getCallTokenPath = "https://ok.ru/web-api/v2/videochat/getCallToken"
 	// Body {"id": N} — not peer uid. Captured values: 30, 38.
-	callTokenAPIIDCaller   = 30
-	callTokenAPIIDReceiver = 22
+	callTokenAPIID = 30
 )
 
 func NewOkClient(cookies string) *OkClient {
@@ -73,7 +72,7 @@ func (c *OkClient) GetCallToken(peerID int64) (CallParams, error) {
 	var out CallParams
 	_ = peerID
 
-	payload, _ := json.Marshal(map[string]interface{}{"id": callTokenAPIIDCaller})
+	payload, _ := json.Marshal(map[string]interface{}{"id": callTokenAPIID})
 	body, code, err := c.doJSON(http.MethodPost, getCallTokenPath, payload, nil)
 	if err != nil {
 		return out, err

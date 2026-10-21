@@ -54,9 +54,14 @@ body: {"id": 30}
 Плюс: как exit узнаёт о **входящем** звонке.
 
 
-## Receiver getCallToken
+## Шаг 2 — calls.okcdn.ru/fb.do (снято)
 
-POST body `{"id": 22}` then:
-`wss://videowebrtc.okcdn.ru/ws2?...&clientType=PORTAL&tgt=accept`
+POST https://calls.okcdn.ru/fb.do
+  method=auth.anonymLogin
+  application_key=CPCCMQKGDIHBABABA
+  session_data={version, device_id, client_type:SDK_JS, auth_token:$...}
 
-Caller: `{"id": 30}` → calls.okcdn.ru + token.
+→ uid, session_key, api_server
+
+Media/TURN response (method name TBD):
+  token, endpoint wss://videowebrtc.okcdn.ru/ws2, turn_server, client_type PORTAL, external_user_type ODKL
