@@ -89,3 +89,30 @@ HTML: `data-conversation-id`, `data-direction="INCOMING"`.
 
 Still TODO: how the page **learns** about ringing before this dk call
 (websocket / long-poll / push) — that is the exit WaitIncomingCall source.
+
+
+## videowebrtc ws2 signaling (PORTAL, tgt=accept) — снято
+
+Connect:
+```
+wss://videowebrtc.okcdn.ru/ws2?userId=<local>&entityType=USER
+  &conversationId=<uuid>&token=<media token>
+  &platform=WEB&appVersion=1.1&version=5&device=browser
+  &capabilities=3F&clientType=PORTAL&tgt=accept
+```
+
+Server → client (JSON notifications), same shape as MAX path:
+
+1. `notification: connection`
+   - peerId, endpoint (ws2 with peerId)
+   - conversationParams.turn / stun
+   - conversation.state=ACTIVE, topology=DIRECT
+   - participants[]: externalId.type=ODKL, state CALLED|ACCEPTED, roles CREATOR
+
+2. `notification: settings-update` — camera/screenSharing/badNet
+
+3. `notification: hungup` — reason CANCELED, participantId
+
+4. `notification: closed-conversation`
+
+Tunnel data can reuse oneme ICE-injection / DataChannel on this socket.
