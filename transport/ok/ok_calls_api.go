@@ -100,6 +100,48 @@ func (c *OkClient) AuthAnonymLogin(authToken, deviceID string) (CallsSession, er
 	return sess, nil
 }
 
+// SystemGetInfo — method=system.getInfo (keepalive / clock).
+func (c *OkClient) SystemGetInfo(sessionKey string) error {
+	form := url.Values{}
+	form.Set("method", "system.getInfo")
+	form.Set("format", "JSON")
+	form.Set("application_key", callsApplicationKey)
+	form.Set("session_key", sessionKey)
+	body, code, err := c.doForm(http.MethodPost, callsFBDO, form)
+	if err != nil {
+		return err
+	}
+	if code != 200 {
+		return fmt.Errorf("system.getInfo HTTP %d: %s", code, truncate(body, 200))
+	}
+	logInfo("system.getInfo: %s", truncate(body, 120))
+	return nil
+}
+
+// VchatGetConversationParams — method=vchat.getConversationParams
+// conversationId + session_key → token, endpoint, TURN, client_type PORTAL.
+func (c *OkClient) VchatGetConversationParams(sessionKey, conversationID string) (CallParams, error) {
+	form := url.Values{}
+	form.Set("method", "vchat.getConversationParams")
+	form.Set("format", "JSON")
+	form.Set("application_key", callsApplicationKey)
+	form.Set("session_key", sessionKey)
+	form.Set("conversationId", conversationID)
+	body, code, err := c.doForm(http.MethodPost, callsFBDO, form)
+	if err != nil {
+		return CallParams{}, err
+	}
+	if code != 200 {
+		return CallParams{}, fmt.Errorf("vchat.getConversationParams HTTP %d: %s", code, truncate(body, 300))
+	}
+	_, out, err := ParseMediaParams(body)
+	if err != nil {
+		return out, err
+	}
+	out.ConvID = conversationID
+	return out, nil
+}
+
 // ParseMediaParams unmarshals the videowebrtc/TURN payload from calls API.
 func ParseMediaParams(raw []byte) (MediaParams, CallParams, error) {
 	var m MediaParams
