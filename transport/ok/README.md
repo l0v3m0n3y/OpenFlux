@@ -116,3 +116,22 @@ Server → client (JSON notifications), same shape as MAX path:
 4. `notification: closed-conversation`
 
 Tunnel data can reuse oneme ICE-injection / DataChannel on this socket.
+
+
+## Incoming ring — PeriodicManager (NewsFetchCoordinator.js)
+
+```
+POST https://ok.ru/push?cmd=PeriodicManager&gwt.requested=<hash>&sse=true&p_sId=<id>
+Content-Type: application/x-www-form-urlencoded
+body: blocks=MainFeedsNewFeedPush,PS,VCP,...&p_NLP=<ts>
+```
+
+- Long-lived stream (SSE or long-poll).
+- Chunks split by `<!--SSP-->` (join marker `<!--SP-->`).
+- Header `Rendered-Blocks` lists which blocks were in the chunk.
+- **VCP** = Video Call Push → feeds calls bootstrap `onPush` → VideoChatCall INCOMING.
+
+In transport: `OkClient.SetPushConfig` + `WaitIncomingCall` / `WaitIncomingCallPush`
+(`ok_push.go`). Adblock often blocks `/push` — disable on ok.ru when capturing.
+
+Exact VCP chunk HTML still best taken from a live EventStream with adblock off.

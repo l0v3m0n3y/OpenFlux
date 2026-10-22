@@ -103,12 +103,7 @@ func (c *OkClient) GetCallToken(peerID int64) (CallParams, error) {
 	return out, nil
 }
 
-// WaitIncomingCall blocks until an incoming OK videochat is observed.
-// TODO: implement via real channel (WS, long-poll, or OK event API from HAR).
-// Without this, exit role cannot work.
-func (c *OkClient) WaitIncomingCall() (CallParams, error) {
-	return CallParams{}, fmt.Errorf("ok: WaitIncomingCall not implemented — need HAR of incoming call on ok.ru")
-}
+// WaitIncomingCall is implemented in ok_push.go (PeriodicManager SSE + VCP).
 
 // AcceptCall confirms the incoming call if API requires a separate step before ws2.
 // TODO: from HAR (may be part of videowebrtc accept-call only).

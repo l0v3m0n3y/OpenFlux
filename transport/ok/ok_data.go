@@ -23,13 +23,14 @@ type CallParams struct {
 	StunURLs []string
 }
 
-// OkClient holds ok.ru browser cookies + optional calls.okcdn.ru session.
+// OkClient holds ok.ru browser cookies + optional calls.okcdn.ru session + push.
 type OkClient struct {
 	cookies      string
 	ua           string
 	deviceID      string
 	mu           sync.Mutex
 	callsSession *CallsSession // set after auth.anonymLogin on calls.okcdn.ru
+	pushConfig   *PushConfig   // PeriodicManager SSE (NewsFetchCoordinator)
 }
 
 // CallHandler mirrors oneme.CallHandler — media path over videowebrtc.
